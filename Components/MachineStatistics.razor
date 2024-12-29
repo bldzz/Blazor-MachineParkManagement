@@ -1,0 +1,19 @@
+﻿@using MachineParkManagement.Models
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Machine Statistics</h5>
+        <p class="card-text">Total Machines: <strong>@TotalMachines</strong></p>
+        <p class="card-text">Online Machines: <span class="text-success fw-bold">@OnlineMachines</span></p>
+        <p class="card-text">Offline Machines: <span class="text-danger fw-bold">@OfflineMachines</span></p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<Machine> Machines { get; set; } = new();
+
+    private int TotalMachines => Machines.Count;
+    private int OnlineMachines => Machines.Count(m => m.Status == "Online");
+    private int OfflineMachines => Machines.Count(m => m.Status == "Offline");
+}

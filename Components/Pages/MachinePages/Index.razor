@@ -1,0 +1,62 @@
+﻿@page "/machines"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using MachineParkManagement.Models
+@implements IAsyncDisposable
+@inject IDbContextFactory<MachineParkManagementContext> DbFactory
+
+<PageTitle>Machine Management</PageTitle>
+
+<div class="mt-5 container">
+    <h1 class="mb-4">Machine Management</h1>
+
+
+    <!-- Create New Machine Link -->
+    <div class="mb-3">
+        <a class="btn btn-primary" href="machines/create">Create New Machine</a>
+    </div>
+
+    <!-- Machines Table -->
+    <div class="table-responsive">
+        <QuickGrid Class="table-striped table-bordered table-hover table" Items="Machines">
+            
+                <PropertyColumn Property="machine => machine.Name" Title="Name" />
+            <PropertyColumn Property="machine => machine.Status" Title="Status" />
+            <PropertyColumn Property="machine => machine.LastData" Title="Last Data" />
+
+            
+
+            <TemplateColumn Context="machine" Title="Actions">
+                <a class="btn btn-sm btn-warning" href="@($"machines/edit?id={machine.Id}")">Edit</a>
+                <a class="btn btn-sm btn-info" href="@($"machines/details?id={machine.Id}")">Details</a>
+                <a class="btn btn-sm btn-danger" href="@($"machines/delete?id={machine.Id}")">Delete</a>
+            </TemplateColumn>
+        </QuickGrid>
+
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="mt-10">
+
+    <MachineStatistics Machines="Machines.ToList()" />
+    </div>
+
+</div>
+
+@code {
+    private MachineParkManagementContext context = default!;
+    private IQueryable<Machine> Machines = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        // Fetch machine data as IQueryable
+        Machines = context.Machine;
+
+        // to silence warning, Return a completed task since there are no asynchronous operations
+        // return Task.CompletedTask;
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,59 @@
+﻿@page "/machines/create"
+@using Microsoft.EntityFrameworkCore
+@using MachineParkManagement.Models
+@inject IDbContextFactory<MachineParkManagementContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Machine</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Machine" OnValidSubmit="AddMachine" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label> 
+                <InputText id="name" @bind-Value="Machine.Name" class="form-control" /> 
+                <ValidationMessage For="() => Machine.Name" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label>
+                <InputSelect id="machineStatus" class="form-select" @bind-Value="Machine.Status">
+                    <option value="" disabled>Select Status</option>
+                    <option value="Online">Online</option>
+                    <option value="Offline">Offline</option>
+                </InputSelect>
+                @* <InputText id="status" @bind-Value="Machine.Status" class="form-control" />  *@
+                <ValidationMessage For="() => Machine.Status" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="lastdata" class="form-label">LastData:</label> 
+                <InputText id="lastdata" @bind-Value="Machine.LastData" class="form-control" /> 
+                <ValidationMessage For="() => Machine.LastData" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/machines">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Machine Machine { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddMachine()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Machine.Add(Machine);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/machines");
+    }
+}

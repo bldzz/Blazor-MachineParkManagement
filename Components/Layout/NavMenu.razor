@@ -1,0 +1,60 @@
+﻿@using MachineParkManagement.Models
+@using Microsoft.EntityFrameworkCore
+@implements IAsyncDisposable
+@inject IDbContextFactory<MachineParkManagementContext> DbFactory
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">MachineParkManagement</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weather">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Machines">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Machines
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <MachineStatistics Machines="Machines.ToList()" />
+        </div>
+
+
+    </nav>
+</div>
+
+
+@code {
+    private MachineParkManagementContext context = default!;
+    private IQueryable<Machine> Machines = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        // Fetch machine data as IQueryable
+        Machines = context.Machine;
+
+        // to silence warning, Return a completed task since there are no asynchronous operations
+        // return Task.CompletedTask;
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

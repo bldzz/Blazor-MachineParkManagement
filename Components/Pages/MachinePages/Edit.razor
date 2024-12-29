@@ -1,0 +1,104 @@
+﻿@page "/machines/edit"
+@using Microsoft.EntityFrameworkCore
+@using MachineParkManagement.Models
+@inject IDbContextFactory<MachineParkManagementContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Machine</h2>
+<hr />
+@if (Machine is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Machine" OnValidSubmit="UpdateMachine" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Machine.Id" value="@Machine.Id" />
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Machine.Name" class="form-control" />
+                    <ValidationMessage For="() => Machine.Name" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    <InputSelect id="machineStatus" class="form-select" @bind-Value="Machine.Status">
+                        <option value="" disabled>Select Status</option>
+                        <option value="Online">Online</option>
+                        <option value="Offline">Offline</option>
+                    </InputSelect>
+                    @* <InputText id="status" @bind-Value="Machine.Status" class="form-control" /> *@
+                    <ValidationMessage For="() => Machine.Status" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="lastdata" class="form-label">LastData:</label>
+                    <InputText id="lastdata" @bind-Value="Machine.LastData" class="form-control" />
+                    <ValidationMessage For="() => Machine.LastData" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/machines">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private Guid Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Machine? Machine { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Machine ??= await context.Machine.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Machine is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateMachine()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Machine!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!MachineExists(Machine!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/machines");
+    }
+
+    private bool MachineExists(Guid id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Machine.Any(e => e.Id == id);
+    }
+}
