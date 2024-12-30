@@ -4,44 +4,56 @@
 @inject IDbContextFactory<MachineParkManagementContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Machine</PageTitle>
 
-<h1>Create</h1>
+<div class="mx-auto mt-10 max-w-4xl">
+    <h1 class="mb-6 text-2xl font-semibold text-gray-800">Create Machine</h1>
+    <hr class="mb-6" />
 
-<h2>Machine</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Machine" OnValidSubmit="AddMachine" FormName="create" Enhance>
+    <!-- Form Section -->
+    <div class="rounded-lg bg-white p-6 shadow-md">
+        <EditForm method="post" Model="Machine" OnValidSubmit="AddMachine" FormName="create" class="space-y-6">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="name" class="form-label">Name:</label> 
-                <InputText id="name" @bind-Value="Machine.Name" class="form-control" /> 
-                <ValidationMessage For="() => Machine.Name" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="status" class="form-label">Status:</label>
-                <InputSelect id="machineStatus" class="form-select" @bind-Value="Machine.Status">
+            <ValidationSummary class="text-sm text-red-500" role="alert" />
+
+            <!-- Name Field -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                <InputText id="name" @bind-Value="Machine.Name" class="mt-1 block w-full rounded-md border border-gray-300 text-gray-800 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                <ValidationMessage For="() => Machine.Name" class="text-red-500 text-xs mt-1" />
+            </div>
+
+            <!-- Status Field -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700">Status:</label>
+                <InputSelect id="machineStatus" class="mt-1 block w-full rounded-md border border-gray-300 text-gray-800 shadow-sm focus:ring-blue-500 focus:border-blue-500" @bind-Value="Machine.Status">
                     <option value="" disabled>Select Status</option>
                     <option value="Online">Online</option>
                     <option value="Offline">Offline</option>
                 </InputSelect>
-                @* <InputText id="status" @bind-Value="Machine.Status" class="form-control" />  *@
-                <ValidationMessage For="() => Machine.Status" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="lastdata" class="form-label">LastData:</label> 
-                <InputText id="lastdata" @bind-Value="Machine.LastData" class="form-control" /> 
-                <ValidationMessage For="() => Machine.LastData" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <ValidationMessage For="() => Machine.Status" class="text-red-500 text-xs mt-1" />
+            </div>
+
+            <!-- Last Data Field -->
+            <div>
+                <label for="lastdata" class="block text-sm font-medium text-gray-700">Last Data:</label>
+                <InputText id="lastdata" @bind-Value="Machine.LastData" class="mt-1 block w-full rounded-md border border-gray-300 text-gray-800 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                <ValidationMessage For="() => Machine.LastData" class="text-red-500 text-xs mt-1" />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex items-center justify-end">
+                <button type="submit" class="rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    Create
+                </button>
+            </div>
         </EditForm>
     </div>
-</div>
 
-<div>
-    <a href="/machines">Back to List</a>
+    <!-- Back to List Link -->
+    <div class="mt-6">
+        <a href="/machines" class="text-sm font-medium text-blue-500 hover:text-blue-700">Back to List</a>
+    </div>
 </div>
 
 @code {

@@ -4,29 +4,51 @@
 @inject IDbContextFactory<MachineParkManagementContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Details</PageTitle>
+<PageTitle>Machine Details</PageTitle>
 
-<h1>Details</h1>
+<div class="container mx-auto mt-10 max-w-xl rounded-lg bg-white p-6 shadow-md">
+    <!-- Page Title -->
+    <h1 class="mb-6 text-center text-2xl font-semibold text-gray-800">Machine Details</h1>
 
-<div>
-    <h2>Machine</h2>
-    <hr />
+    <!-- Machine Details -->
     @if (machine is null)
     {
-        <p><em>Loading...</em></p>
+        <p class="text-center italic text-gray-500">Loading...</p>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">Name</dt>
-            <dd class="col-sm-10">@machine.Name</dd>
-            <dt class="col-sm-2">Status</dt>
-            <dd class="col-sm-10">@machine.Status</dd>
-            <dt class="col-sm-2">LastData</dt>
-            <dd class="col-sm-10">@machine.LastData</dd>
-        </dl>
+    else
+    {
         <div>
-            <a href="@($"/machines/edit?id={machine.Id}")">Edit</a> |
-            <a href="@($"/machines")">Back to List</a>
+            <hr class="mb-4 border-gray-300" />
+            <dl class="space-y-4 text-gray-600">
+                <div class="flex justify-around">
+                    <dt class="font-medium">Name</dt>
+                    <dd class="text-gray-900">@machine.Name</dd>
+                </div>
+                <div class="flex justify-around">
+                    <dt class="font-medium">Status</dt>
+                    <dd>
+                        <span class="@GetStatusClasses(machine.Status)">
+                            @machine.Status
+                        </span>
+                    </dd>
+                </div>
+                <div class="flex justify-around">
+                    <dt class="font-medium">Last Data</dt>
+                    <dd class="text-gray-900">@machine.LastData</dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-6 flex justify-center space-x-4">
+            <a href="@($"/machines/edit?id={machine.Id}")"
+               class="rounded bg-indigo-500 px-4 py-2 font-medium text-white shadow hover:bg-indigo-600">
+                Edit
+            </a>
+            <a href="/machines"
+               class="rounded bg-gray-500 px-4 py-2 font-medium text-white shadow hover:bg-gray-600">
+                Back to List
+            </a>
         </div>
     }
 </div>
@@ -46,5 +68,12 @@
         {
             NavigationManager.NavigateTo("notfound");
         }
+    }
+
+    private string GetStatusClasses(string status)
+    {
+        return status == "Online"
+            ? "px-2 py-1 text-white bg-green-500 rounded-md"
+            : "px-2 py-1 text-white bg-red-500 rounded-md";
     }
 }

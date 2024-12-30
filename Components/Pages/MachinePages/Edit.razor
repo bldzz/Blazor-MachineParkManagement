@@ -4,52 +4,63 @@
 @inject IDbContextFactory<MachineParkManagementContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Edit Machine</PageTitle>
 
-<h1>Edit</h1>
+<div class="container mx-auto mt-10 max-w-xl rounded-lg bg-white p-6 shadow-md">
+    <!-- Page Title -->
+    <h1 class="mb-6 text-center text-2xl font-semibold text-gray-800">Edit Machine</h1>
 
-<h2>Machine</h2>
-<hr />
-@if (Machine is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="Machine" OnValidSubmit="UpdateMachine" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
-                <input type="hidden" name="Machine.Id" value="@Machine.Id" />
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name:</label>
-                    <InputText id="name" @bind-Value="Machine.Name" class="form-control" />
-                    <ValidationMessage For="() => Machine.Name" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status:</label>
-                    <InputSelect id="machineStatus" class="form-select" @bind-Value="Machine.Status">
-                        <option value="" disabled>Select Status</option>
-                        <option value="Online">Online</option>
-                        <option value="Offline">Offline</option>
-                    </InputSelect>
-                    @* <InputText id="status" @bind-Value="Machine.Status" class="form-control" /> *@
-                    <ValidationMessage For="() => Machine.Status" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="lastdata" class="form-label">LastData:</label>
-                    <InputText id="lastdata" @bind-Value="Machine.LastData" class="form-control" />
-                    <ValidationMessage For="() => Machine.LastData" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
-        </div>
-    </div>
-}
+    <!-- Edit Form -->
+    @if (Machine is null)
+    {
+        <p class="text-center italic text-gray-500">Loading...</p>
+    }
+    else
+    {
+        <EditForm Model="Machine" OnValidSubmit="UpdateMachine" class="space-y-6">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-red-600" />
 
-<div>
-    <a href="/machines">Back to List</a>
+            <!-- Hidden Field for ID -->
+            <input type="hidden" name="Machine.Id" value="@Machine.Id" />
+
+            <!-- Name Field -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                <InputText id="name" @bind-Value="Machine.Name"
+                           class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                <ValidationMessage For="() => Machine.Name" class="text-red-500 text-sm mt-1" />
+            </div>
+
+            <!-- Status Field -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700">Status:</label>
+                <InputSelect id="machineStatus" @bind-Value="Machine.Status"
+                             class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <option value="" disabled>Select Status</option>
+                    <option value="Online">Online</option>
+                    <option value="Offline">Offline</option>
+                </InputSelect>
+                <ValidationMessage For="() => Machine.Status" class="text-red-500 text-sm mt-1" />
+            </div>
+
+            <!-- Last Data Field -->
+            <div>
+                <label for="lastdata" class="block text-sm font-medium text-gray-700">Last Data:</label>
+                <InputText id="lastdata" @bind-Value="Machine.LastData"
+                           class="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+                <ValidationMessage For="() => Machine.LastData" class="text-red-500 text-sm mt-1" />
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-between">
+                <button type="submit" class="rounded bg-indigo-500 px-4 py-2 font-medium text-white shadow hover:bg-indigo-600">
+                    Save
+                </button>
+                <a href="/machines" class="font-medium text-indigo-500 hover:text-indigo-600">Back to List</a>
+            </div>
+        </EditForm>
+    }
 </div>
 
 @code {
@@ -70,8 +81,6 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task UpdateMachine()
     {
         using var context = DbFactory.CreateDbContext();

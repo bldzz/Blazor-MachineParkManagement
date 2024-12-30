@@ -1,11 +1,19 @@
 ﻿@using MachineParkManagement.Models
 
-<div class="card mt-3">
-    <div class="card-body">
-        <h5 class="card-title">Machine Statistics</h5>
-        <p class="card-text">Total Machines: <strong>@TotalMachines</strong></p>
-        <p class="card-text">Online Machines: <span class="text-success fw-bold">@OnlineMachines</span></p>
-        <p class="card-text">Offline Machines: <span class="text-danger fw-bold">@OfflineMachines</span></p>
+<div class="mt-3 min-h-52 min-w-96 rounded-lg bg-gray-100 p-6">
+    <h5 class="mb-4 text-center text-lg font-bold text-gray-800">Machine Statistics</h5>
+    <div class="border-b-2 mb-4 border-gray-300"></div>
+    <div class="mb-2 flex items-center justify-between font-medium text-gray-600">
+        <span>Total Machines:</span>
+        <span class="font-bold text-gray-900">@TotalMachines</span>
+    </div>
+    <div class="mb-2 flex items-center justify-between font-medium text-gray-600">
+        <span>Online Machines:</span>
+        <span class="font-bold text-green-600">@OnlineMachines</span>
+    </div>
+    <div class="flex items-center justify-between font-medium text-gray-600">
+        <span>Offline Machines:</span>
+        <span class="font-bold text-red-600">@OfflineMachines</span>
     </div>
 </div>
 

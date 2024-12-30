@@ -3,43 +3,24 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<MachineParkManagementContext> DbFactory
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">MachineParkManagement</a>
+<!-- Navbar -->
+<header class="bg-gray-800 text-white shadow-md">
+    <div class="container mx-auto flex items-center justify-between px-6 py-4">
+        <!-- Brand -->
+        <a href="/" class="text-xl font-bold hover:text-gray-300">Management Central</a>
+
+        <!-- Navigation Menu -->
+        <nav class="flex space-x-4">
+            <NavLink class="text-sm font-medium hover:text-gray-300" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+            </NavLink>
+
+            <NavLink class="text-sm font-medium hover:text-gray-300" href="machines">
+                <span class="bi bi-list-task" aria-hidden="true"></span> Machines
+            </NavLink>
+        </nav>
     </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Machines">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Machines
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <MachineStatistics Machines="Machines.ToList()" />
-        </div>
-
-
-    </nav>
-</div>
-
+</header>
 
 @code {
     private MachineParkManagementContext context = default!;
@@ -52,8 +33,8 @@
         // Fetch machine data as IQueryable
         Machines = context.Machine;
 
-        // to silence warning, Return a completed task since there are no asynchronous operations
-        // return Task.CompletedTask;
+        // Return a completed task since there are no asynchronous operations
+        await Task.CompletedTask;
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

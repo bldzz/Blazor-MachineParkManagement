@@ -1,7 +1,41 @@
 ﻿@page "/"
+@using MachineParkManagement.Models
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<MachineParkManagementContext> DbFactory
 
-<PageTitle>Home</PageTitle>
+<div class="container mx-auto mt-10">
+    <PageTitle>Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
+    <!-- Page Title -->
+    <h1 class="mb-6 text-center text-2xl font-semibold text-gray-800">Dashboard</h1>
 
-Welcome to your new app.
+    <!-- Create New Machine Link -->
+    <div class="mb-6 flex justify-center">
+        <a href="machines/create"
+           class="rounded bg-indigo-500 px-6 py-3 font-medium text-white shadow hover:bg-indigo-600">
+            Create New Machine
+        </a>
+    </div>
+
+    <!-- Layout for Machine Statistics -->
+    <div class="mt-10 flex justify-center">
+        <div class="w-[600px] rounded-lg bg-white p-6 shadow-md">
+            <MachineStatistics Machines="Machines" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private MachineParkManagementContext context = default!;
+    private List<Models.Machine> Machines = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        // Fetch machine data
+        Machines = await context.Machine.ToListAsync();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
